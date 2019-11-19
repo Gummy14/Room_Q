@@ -1,32 +1,34 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+  <v-app>
+    <v-content>
+      <router-view/>
+    </v-content>
+  </v-app>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+import firebase from 'firebase'
+export default {
+  name: 'App',
+  data: () => ({
+    //
+  }),
+  mounted () {
+    var currentUser = firebase.auth().currentUser
 
-#nav {
-  padding: 30px;
+    if (currentUser) {
+      var user = {
+        username: currentUser.displayName
+      }
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
+      this.$store.commit('setUser', {
+        User: user
+      })
+      this.$router.replace('/home')
+    }
+    else {
+      this.$router.replace('/')
     }
   }
 }
-</style>
+</script>
