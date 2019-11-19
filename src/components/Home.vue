@@ -131,6 +131,7 @@ export default {
   },
   mounted () {
     var self = this
+
     db.collection('queues').doc('room').onSnapshot(function (doc) {
       self.$store.commit('setQueue', {
         Queue: doc.data().queue

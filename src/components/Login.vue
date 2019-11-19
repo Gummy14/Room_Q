@@ -39,6 +39,13 @@ export default {
       var self = this
       firebase.auth().signInWithEmailAndPassword(this.email, this.password).then(
         function () {
+          var currentUser = firebase.auth().currentUser
+          var user = {
+            username: currentUser.displayName
+          }
+          self.$store.commit('setUser', {
+            User: user
+          })
           alert('Success!')
           self.$router.replace('/home')
         },

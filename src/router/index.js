@@ -8,6 +8,7 @@ import TopOfQueue from '@/components/TopOfQueue.vue'
 import SearchResults from '@/components/SearchResults.vue'
 import QueueList from '@/components/QueueList.vue'
 import firebase from 'firebase'
+import store from '../store/index.js';
 
 Vue.use(VueRouter)
 
@@ -66,7 +67,14 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   const currentUser = firebase.auth().currentUser
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
-
+  if(currentUser) {
+    var user = {
+      username: currentUser.displayName
+    }
+    store.commit('setUser', {
+      User: user
+    })
+  }
   if (requiresAuth && !currentUser) next('login')
   else if (!requiresAuth && currentUser) next('home')
   else next()
