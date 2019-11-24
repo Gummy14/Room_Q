@@ -35,8 +35,8 @@
       <v-list>
         <v-list-item>
           <div>
-            <h2>Hi {{ user.username }}</h2>
-            <h5>There are X people in the room</h5>
+            <h2 class="username">{{ user.username }}</h2>
+            <h5>{{ crowdSize}}</h5>
           </div>
         </v-list-item>
         <v-subheader>Options</v-subheader>
@@ -53,7 +53,7 @@
             <h5>Leave this room and return to the room search screen</h5>
           </div>
           <v-btn text>
-            <v-icon>{{ signOutIcon }}</v-icon>
+            <v-icon @click="signOut">{{ signOutIcon }}</v-icon>
           </v-btn>
         </v-list-item>
       </v-list>
@@ -69,6 +69,7 @@
 </template>
 
 <script>
+import firebase from 'firebase'
 import GetSearchResults from './GetSearchResults'
 import RoomQ from './RoomQ'
 import SearchResults from './SearchResults'
@@ -113,6 +114,22 @@ export default {
           this.query = ''
         })
       }
+    },
+    signOut () {
+      var self = this
+      var userToRemove = this.user
+      firebase.auth().signOut().then(function() {
+        db.collection('queues').doc('room').get().then((doc) => {
+          console.log('userToRemove', doc.data().crowd.filter(x => x !== userToRemove.userId))
+          var crowd = doc.data().crowd.filter(x => x !== userToRemove.userId)
+          db.collection('queues').doc('room').update({ crowd: crowd })
+        })
+        self.$store.commit('clearStore')
+        alert('Successfully Logged Out!')
+        self.$router.replace('/')
+      }).catch(function(error) {
+        alert('Fail!' + error.message)
+      })
     }
   },
   watch: {
@@ -137,14 +154,30 @@ export default {
         Queue: doc.data().queue
       })
     })
+
+    db.collection('queues').doc('room').get().then((doc) => {
+      self.$store.commit('setCrowd', {
+        Crowd: doc.data().crowd
+      })
+    })
   },
   computed: {
-    ...mapState({ user: 'user'})
+    ...mapState({ user: 'user', crowd: 'crowd'}),
+    crowdSize () {
+      if (this.crowd.length === 1) {
+        return 'There is ' + this.crowd.length + ' person in the room'
+      } else {
+        return 'There are ' + this.crowd.length + ' people in the room'
+      }
+    }
   }
 }
 </script>
 <style scoped>
 .query-field {
   padding-left: 1%;
+}
+.username {
+  text-transform:capitalize;
 }
 </style>

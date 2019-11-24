@@ -15,7 +15,8 @@ export default new Vuex.Store({
     apiKeyPosition: 0,
     playMode: false,
     queue: [],
-    user: undefined
+    user: undefined,
+    crowd: []
   },
   mutations: {
     setPlayMode (state, payload) {
@@ -35,6 +36,17 @@ export default new Vuex.Store({
     },
     setUser (state, payload) {
       state.user = payload.User
+    },
+    setCrowd (state, payload) {
+      state.crowd = payload.Crowd
+    },
+    clearStore (state) {
+      state.searchResults = [],
+      state.apiKeyPosition = 0,
+      state.playMode = false,
+      state.queue = [],
+      state.user = undefined,
+      state.crowd = []
     }
   },
   actions: {
@@ -60,6 +72,9 @@ export default new Vuex.Store({
     },
     getUser (state) {
       return state.user
+    },
+    getCrowd (state) {
+      return state.crowd
     }
   }
 })

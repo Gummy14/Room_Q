@@ -69,7 +69,8 @@ router.beforeEach((to, from, next) => {
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
   if(currentUser) {
     var user = {
-      username: currentUser.displayName
+      username: currentUser.displayName,
+      userId: currentUser.uid
     }
     store.commit('setUser', {
       User: user
