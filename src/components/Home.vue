@@ -155,7 +155,7 @@ export default {
       })
     })
 
-    db.collection('queues').doc('room').get().then((doc) => {
+    db.collection('queues').doc('room').onSnapshot(function (doc) {
       self.$store.commit('setCrowd', {
         Crowd: doc.data().crowd
       })

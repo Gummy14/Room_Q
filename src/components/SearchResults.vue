@@ -26,7 +26,9 @@ export default {
         videoId: video.id.videoId,
         title: video.snippet.title,
         thumbnail: video.snippet.thumbnails.high.url,
-        queuedBy: this.user.username
+        queuedBy: this.user.username,
+        votesToSkip: [],
+        votesUp: []
       }
       queue.push(newQueueObject)
       this.$store.commit('setQueue', {
