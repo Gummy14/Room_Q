@@ -37,7 +37,7 @@ export default {
           Queue: this.fullQueue
         })
 
-        db.collection('queues').doc('room').update({ queue: this.fullQueue })
+       db.collection('queues').doc(this.roomCode).update({ queue: this.fullQueue })
       }
     },
     didVoteToSkip(index) {
@@ -66,7 +66,7 @@ export default {
         Queue: this.fullQueue
       })
 
-      db.collection('queues').doc('room').update({ queue: this.fullQueue })
+     db.collection('queues').doc(this.roomCode).update({ queue: this.fullQueue })
     },
     showUpVoteButton(index) {
       if (this.playMode) index++
@@ -77,7 +77,6 @@ export default {
       this.fullQueue[index].votesUp.push(this.user.userId)
       var entryToMoveUp = this.fullQueue[index]
       var entryAbove = this.fullQueue[index - 1]
-      console.log('entryAbove', entryAbove)
       this.fullQueue[index] = entryAbove
       this.fullQueue[index - 1] = entryToMoveUp
 
@@ -85,7 +84,7 @@ export default {
         Queue: this.fullQueue
       })
 
-      db.collection('queues').doc('room').update({ queue: this.fullQueue })
+     db.collection('queues').doc(this.roomCode).update({ queue: this.fullQueue })
     },
     didVoteUp(index) {
       if (this.playMode) index++
@@ -98,7 +97,7 @@ export default {
     }
   },
   computed: {
-    ...mapState({ user: 'user', crowd: 'crowd', fullQueue: 'queue', playMode: 'playMode'})
+    ...mapState({ user: 'user', crowd: 'crowd', fullQueue: 'queue', playMode: 'playMode', roomCode: 'roomCode'})
   }
 }
 </script>

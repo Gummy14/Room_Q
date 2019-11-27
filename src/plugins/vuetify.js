@@ -10,6 +10,17 @@ export default new Vuetify({
     iconfont: 'mdiSvg',
   },
   theme: {
-    dark: true
+    dark: true,
+    themes: {
+      dark: {
+        primary: '#FFFFFF',
+        accent: '#84000E',
+        secondary: '#DB01C3',
+        success: '#4CAF50',
+        info: '#2196F3',
+        warning: '#FB8C00',
+        error: '#FF5252'
+      }
+    }
   }
 });

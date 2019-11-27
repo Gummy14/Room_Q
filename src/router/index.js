@@ -7,6 +7,7 @@ import RoomQ from '@/components/RoomQ.vue'
 import TopOfQueue from '@/components/TopOfQueue.vue'
 import SearchResults from '@/components/SearchResults.vue'
 import QueueList from '@/components/QueueList.vue'
+import RoomSelect from '@/components/RoomSelect.vue'
 import firebase from 'firebase'
 import store from '../store/index.js';
 
@@ -27,6 +28,14 @@ const routes = [
     path: '/sign-up',
     name: 'sign-up',
     component: SignUp
+  },
+  {
+    path: '/room-select',
+    name: 'room-select',
+    component: RoomSelect,
+    meta: {
+      requiresAuth: true
+    } 
   },
   {
     path: '/home',
@@ -75,9 +84,12 @@ router.beforeEach((to, from, next) => {
     store.commit('setUser', {
       User: user
     })
+    var roomCode = store.getters.getRoomCode
+    console.log(roomCode)
+    
   }
   if (requiresAuth && !currentUser) next('login')
-  else if (!requiresAuth && currentUser) next('home')
+  else if (!requiresAuth && currentUser) next('room-select')
   else next()
 })
 

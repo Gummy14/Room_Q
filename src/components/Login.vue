@@ -28,7 +28,6 @@
 
 <script>
 import firebase from 'firebase'
-import { db } from '../../firebaseConfig'
 export default {
   name: 'login',
   data: () => ({
@@ -38,7 +37,6 @@ export default {
   methods: {
     signIn () {
       var self = this
-      var crowd
       firebase.auth().signInWithEmailAndPassword(this.email, this.password).then(
         function () {
           var currentUser = firebase.auth().currentUser
@@ -50,18 +48,9 @@ export default {
           self.$store.commit('setUser', {
             User: user
           })
-
-          db.collection('queues').doc('room').get().then((doc) => {
-            crowd = doc.data().crowd
-            crowd.push(user.userId)
-            self.$store.commit('setCrowd', {
-              Crowd: crowd
-            })
-            db.collection('queues').doc('room').update({ crowd: crowd })
             
-            alert('Success!')
-            self.$router.replace('/home')
-          })
+          alert('Success!')
+          self.$router.replace('/room-select')
         },
         function (error) {
           alert('Fail!' + error.message)

@@ -17,7 +17,7 @@ import { db } from '../../firebaseConfig'
 export default {
   name: 'search-results',
   computed: {
-    ...mapState({ searchResults: 'searchResults', user: 'user' })
+    ...mapState({ searchResults: 'searchResults', user: 'user', roomCode: 'roomCode' })
   },
   methods: {
     addVideoToQueue (video) {
@@ -35,7 +35,7 @@ export default {
         Queue: queue
       })
 
-      db.collection('queues').doc('room').update({ queue: queue })
+     db.collection('queues').doc(this.roomCode).update({ queue: queue })
       
       this.$store.commit('setSearchResults', {
         SearchResults: []
