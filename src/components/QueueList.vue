@@ -37,7 +37,7 @@ export default {
           Queue: this.fullQueue
         })
 
-       db.collection('queues').doc(this.roomCode).update({ queue: this.fullQueue })
+       db.collection('queues').doc('room').update({ queue: this.fullQueue })
       }
     },
     didVoteToSkip(index) {
@@ -66,7 +66,7 @@ export default {
         Queue: this.fullQueue
       })
 
-     db.collection('queues').doc(this.roomCode).update({ queue: this.fullQueue })
+     db.collection('queues').doc('room').update({ queue: this.fullQueue })
     },
     showUpVoteButton(index) {
       if (this.playMode) index++
@@ -84,7 +84,7 @@ export default {
         Queue: this.fullQueue
       })
 
-     db.collection('queues').doc(this.roomCode).update({ queue: this.fullQueue })
+     db.collection('queues').doc('room').update({ queue: this.fullQueue })
     },
     didVoteUp(index) {
       if (this.playMode) index++
@@ -97,7 +97,7 @@ export default {
     }
   },
   computed: {
-    ...mapState({ user: 'user', crowd: 'crowd', fullQueue: 'queue', playMode: 'playMode', roomCode: 'roomCode'})
+    ...mapState({ user: 'user', crowd: 'crowd', fullQueue: 'queue', playMode: 'playMode'})
   }
 }
 </script>

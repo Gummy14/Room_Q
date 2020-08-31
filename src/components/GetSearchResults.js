@@ -2,7 +2,7 @@ let axios = require('axios')
 let BASE_URL = 'https://www.googleapis.com/youtube/v3/search'
 
 export default function (options, callback) {
-  var self = this
+  // var self = this
   if(!options.apiKey) {
     throw new Error('YouTube API Key Required')
   }  
@@ -22,19 +22,19 @@ export default function (options, callback) {
     }
   })
   .catch(error => {
-    console.log(error)
-    var keyList = self.$store.getters.getApiKeyList
-    var newPosition = self.$store.getters.getApiKeyPosition
-    if (newPosition === 2) {
-      newPosition = 0
-    } else {
-      newPosition++
-    }
-    self.$store.commit('setApiKey', {
-      ApiKey: keyList[newPosition]
-    })
-    self.$store.commit('setApiKeyPosition', {
-      ApiKeyPosition: newPosition
-    })
+    console.log('Failed: ' + error)
+    // var keyList = self.$store.getters.getApiKeyList
+    // var newPosition = self.$store.getters.getApiKeyPosition
+    // if (newPosition === 2) {
+    //   newPosition = 0
+    // } else { 
+    //   newPosition++
+    // }
+    // self.$store.commit('setApiKey', {
+    //   ApiKey: keyList[newPosition]
+    // })
+    // self.$store.commit('setApiKeyPosition', {
+    //   ApiKeyPosition: newPosition
+    // })
   })
 }

@@ -8,19 +8,17 @@
       <div>
         <v-text-field 
           solo-inverted
-          label="Email"
-          v-model="email"
+          label="Name"
+          v-model="name"
         >
         </v-text-field>
         <v-text-field 
           solo-inverted
-          label="Password"
-          type="password"
-          v-model="password"
+          label="Room Code"
+          v-model="roomCode"
         >
         </v-text-field>
-        <v-btn @click="signIn">Login</v-btn>
-        <router-link to="/sign-up">Sign Up</router-link>
+        <v-btn @click="enterRoom">Enter</v-btn>
       </div>
     </div>
   </div>
@@ -31,32 +29,45 @@ import firebase from 'firebase'
 export default {
   name: 'login',
   data: () => ({
-    email: '',
-    password: ''
+    name: '',
+    roomCode: ''
   }),
   methods: {
-    signIn () {
-      var self = this
-      firebase.auth().signInWithEmailAndPassword(this.email, this.password).then(
-        function () {
-          var currentUser = firebase.auth().currentUser
-          
-          var user = {
-            username: currentUser.displayName,
-            userId: currentUser.uid
+    enterRoom () {
+        var db = firebase.firestore()
+        var self = this
+        firebase.auth().signInAnonymously().then(
+          function () {
+            var currentUser = firebase.auth().currentUser
+            currentUser.updateProfile({
+              displayName: self.name,
+            })
+            .then(function() {
+              var user = {
+                username: currentUser.displayName,
+                userId: currentUser.uid
+              }
+              self.$store.commit('setUser', {
+                User: user
+              })
+              db.collection('queues').doc('room').get().then((doc) => {
+                var crowd = doc.data().crowd
+                crowd.push(user)
+                self.$store.commit('setCrowd', {
+                  Crowd: crowd
+                })
+                db.collection('queues').doc('room').update({ crowd: crowd })
+              })
+              .then(() => {
+                self.$router.replace('/home')
+              })
+            })
+          },
+          function (error) {
+            alert('Failed to join!\n' + error.message)
           }
-          self.$store.commit('setUser', {
-            User: user
-          })
-            
-          alert('Success!')
-          self.$router.replace('/room-select')
-        },
-        function (error) {
-          alert('Fail!' + error.message)
-        }
-      )
-    }
+        )
+      }
   }
 }
 </script>

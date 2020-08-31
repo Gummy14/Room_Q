@@ -5,19 +5,12 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    apiKey: 'AIzaSyDrSeaXt35dKhxP1ni3ICIFAf_FaqVkHxU',
-    apiKeyList: [
-      'AIzaSyDrSeaXt35dKhxP1ni3ICIFAf_FaqVkHxU',
-      'AIzaSyDYgRSUwq9UVLz4fhWCfTdKgNJEcZjNAdQ',
-      'AIzaSyD0pTKL9yLJ622YXFatnHqh_6JtNzd4ID8'
-    ],
+    apiKey: 'AIzaSyC-vYRiv_9Z21W7XJetZ1TUadKZRyhB294',
     searchResults: [],
-    apiKeyPosition: 0,
     playMode: false,
     queue: [],
-    user: undefined,
-    crowd: [],
-    roomCode: undefined
+    user: null,
+    crowd: []
   },
   mutations: {
     setPlayMode (state, payload) {
@@ -25,12 +18,6 @@ export default new Vuex.Store({
     },
     setSearchResults (state, payload) {
       state.searchResults = payload.SearchResults
-    },
-    setApiKey (state, payload) {
-      state.apiKey = payload.ApiKey
-    },
-    setApiKeyPosition (state, payload) {
-      state.apiKeyPosition = payload.ApiKeyPosition
     },
     setQueue (state, payload) {
       state.queue = payload.Queue
@@ -41,17 +28,13 @@ export default new Vuex.Store({
     setCrowd (state, payload) {
       state.crowd = payload.Crowd
     },
-    setRoomCode (state, payload) {
-      state.roomCode = payload.RoomCode
-    },
     clearStore (state) {
       state.searchResults = [],
       state.apiKeyPosition = 0,
       state.playMode = false,
       state.queue = [],
-      state.user = undefined,
-      state.crowd = [],
-      state.roomCode = undefined
+      state.user = null,
+      state.crowd = []
     }
   },
   actions: {
@@ -66,12 +49,6 @@ export default new Vuex.Store({
     getApiKey (state) {
       return state.apiKey
     },
-    getApiKeyList (state) {
-      return state.apiKeyList
-    },
-    getApiKeyPosition (state) {
-      return state.apiKeyPosition
-    },
     getQueue (state) {
       return state.queue
     },
@@ -80,9 +57,6 @@ export default new Vuex.Store({
     },
     getCrowd (state) {
       return state.crowd
-    },
-    getRoomCode (state) {
-      return state.roomCode
     }
   }
 })

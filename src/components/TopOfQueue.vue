@@ -32,7 +32,7 @@ export default {
         this.$store.commit('setQueue', {
           Queue: queue
         })
-       db.collection('queues').doc(this.roomCode).update({queue: queue})
+       db.collection('queues').doc('room').update({queue: queue})
       }
     },
     removeFromTopOfQueue () {
@@ -41,7 +41,7 @@ export default {
       this.$store.commit('setQueue', {
         Queue: queue
       })
-     db.collection('queues').doc(this.roomCode).update({queue: queue})
+     db.collection('queues').doc('room').update({queue: queue})
     },
     didVoteToSkip() {
       var votesToSkip = this.topOfQueue.votesToSkip.filter(x => x === this.user.userId)
@@ -62,7 +62,7 @@ export default {
     }
   },
   computed: {
-    ...mapState({ user: 'user', crowd: 'crowd', roomCode: 'roomCode' }),
+    ...mapState({ user: 'user', crowd: 'crowd'}),
     videoHeight () {
       return window.innerWidth*.5625
     }
