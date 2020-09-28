@@ -1,10 +1,10 @@
 <template>
   <div>
-    <v-card raised hover v-for="video in searchResults" :key="video.id.videoId" @click="addVideoToQueue(video)">
+    <v-card raised hover v-for="song in searchResults" :key="song.id" @click="addSongToQueue(song)">
       <span>
-        <img :src="video.snippet.thumbnails.high.url" width="33%" height="100%">
+        <img :src="song.album.images[0].url" width="33%" height="100%">
         <div>
-          <h3>{{ video.snippet.title }}</h3>
+          <h3>{{ song.name }}</h3>
         </div>
       </span>
     </v-card>
@@ -20,22 +20,20 @@ export default {
     ...mapState({ searchResults: 'searchResults', user: 'user'})
   },
   methods: {
-    addVideoToQueue (video) {
-      var queue = this.$store.getters.getQueue
+    addSongToQueue (song) {
       var newQueueObject = {
-        videoId: video.id.videoId,
-        title: video.snippet.title,
-        thumbnail: video.snippet.thumbnails.high.url,
+        songId: song.id,
+        title: song.name,
+        thumbnail: song.album.images[0].url,
         queuedBy: this.user.username,
         votesToSkip: [],
         votesUp: []
       }
-      queue.push(newQueueObject)
-      this.$store.commit('setQueue', {
-        Queue: queue
-      })
+      
+      var newQueue = JSON.parse ( JSON.stringify ( this.$store.getters.getQueue) )
+      newQueue.push(newQueueObject)
 
-     db.collection('queues').doc('room').update({ queue: queue })
+      db.collection('queues').doc('room').update({ queue: newQueue })
       
       this.$store.commit('setSearchResults', {
         SearchResults: []

@@ -42,13 +42,6 @@
         <v-subheader>Options</v-subheader>
         <v-list-item>
           <div>
-            <h2>Play Mode</h2>
-            <h5>Setting this option will play queued songs from your device</h5>
-          </div>
-          <v-switch v-model="playMode" :label="`${playMode === true ? 'On' : 'Off'}`"></v-switch>
-        </v-list-item>
-        <v-list-item>
-          <div>
             <h2>Leave Room</h2>
             <h5>Leave this room and return to the room search screen</h5>
           </div>
@@ -60,7 +53,7 @@
     </v-navigation-drawer>
 
     <v-content>
-      <RoomQ></RoomQ>
+       <queue-list></queue-list>
       <v-dialog v-model="isSearching">
         <search-results @finishedSearching="isSearching=false"></search-results>
       </v-dialog>
@@ -71,7 +64,7 @@
 <script>
 import firebase from 'firebase'
 import GetSearchResults from './GetSearchResults'
-import RoomQ from './RoomQ'
+import QueueList from './QueueList'
 import SearchResults from './SearchResults'
 import { mdiExitToApp } from '@mdi/js'
 import { mdiMagnify } from '@mdi/js'
@@ -80,7 +73,7 @@ import { mapState } from 'vuex'
 export default {
   name: 'home',
   components: {
-    RoomQ,
+    QueueList,
     SearchResults
   },
   data () {
@@ -89,7 +82,6 @@ export default {
       drawer: false,
       signOutIcon: mdiExitToApp,
       searchIcon: mdiMagnify,
-      playMode: false,
       query: '',
       isSearching: false,
     }
@@ -105,7 +97,6 @@ export default {
       this.isSearching = true
       if (this.query !== '') {
         GetSearchResults({
-          apiKey: this.$store.getters.getApiKey,
           searchQuery: this.query
         }, response => {
           this.$store.commit('setSearchResults', {
@@ -138,11 +129,6 @@ export default {
           SearchResults: []
         })
       }
-    },
-    playMode (val) {
-      this.$store.commit('setPlayMode', {
-        PlayMode: val
-      })
     }
   },
   mounted () {

@@ -1,40 +1,27 @@
 let axios = require('axios')
-let BASE_URL = 'https://www.googleapis.com/youtube/v3/search'
+let BASE_URL = 'https://api.spotify.com/v1/search'
 
 export default function (options, callback) {
-  // var self = this
-  if(!options.apiKey) {
-    throw new Error('YouTube API Key Required')
-  }  
-  axios.get(BASE_URL, { 
+  // if(!options.apiKey) {
+  //   throw new Error('Spotify API Key Required')
+  // }  
+  axios.get(BASE_URL, {
+    headers: {
+      Authorization: 'Bearer BQDd6DPyDBOhN1BvXsmGHElR7AjF0QLppg2uu8VSWS-TW_vivVYrPYlG5CmsPnDVBdi_W77ZXV3JnOWO3pLFMzubHpPtjeMDS3aMMrHfFYcqPwzNDwb3_QM5Zn74JzvPH3fkdZ8zaJSjhrttDl2PJMjMMbDi51rgE8Lbf5tIE57zL2cPEuFtxT50DO95htUWCMSZ7HMjHXqr',
+    },
     params: {
-      part: 'id, snippet',
-      key: options.apiKey,
       q: options.searchQuery,
-      type: 'video',
-      videoCategoryId: 10,
-      fields: 'items(id/videoId,snippet(thumbnails/high/url,title))'
+      type: 'track',
+      market: 'US',
+      limit: 5,
     } 
   })
   .then(response => {
     if(callback) {
-      callback(response.data.items)
+      callback(response.data.tracks.items)
     }
   })
   .catch(error => {
     console.log('Failed: ' + error)
-    // var keyList = self.$store.getters.getApiKeyList
-    // var newPosition = self.$store.getters.getApiKeyPosition
-    // if (newPosition === 2) {
-    //   newPosition = 0
-    // } else { 
-    //   newPosition++
-    // }
-    // self.$store.commit('setApiKey', {
-    //   ApiKey: keyList[newPosition]
-    // })
-    // self.$store.commit('setApiKeyPosition', {
-    //   ApiKeyPosition: newPosition
-    // })
   })
 }

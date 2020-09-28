@@ -2,8 +2,6 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '@/components/Login.vue'
 import Home from '@/components/Home.vue'
-import RoomQ from '@/components/RoomQ.vue'
-import TopOfQueue from '@/components/TopOfQueue.vue'
 import SearchResults from '@/components/SearchResults.vue'
 import QueueList from '@/components/QueueList.vue'
 import firebase from 'firebase'
@@ -29,16 +27,6 @@ const routes = [
     meta: {
       requiresAuth: true
     }
-  },
-  {
-    path: '/roomq',
-    name: 'roomq',
-    component: RoomQ
-  },
-  {
-    path: '/top-of-queue',
-    name: 'top-of-queue',
-    component: TopOfQueue
   },
   {
     path: '/search-results',

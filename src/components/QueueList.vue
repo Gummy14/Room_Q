@@ -1,13 +1,14 @@
 <template>
   <div>
+    <h2 v-if="queue.length > 0">Now Queued</h2>
     <v-expansion-panels
       accordion
       v-if="queue && queue.length > 0" two-line>
-      <template v-for="(video, index) in queue">
-      <v-expansion-panel class="panel" ripple :key="video.videoId">
-        <v-expansion-panel-header>{{ video.title }}</v-expansion-panel-header>
+      <template v-for="(song, index) in queue">
+      <v-expansion-panel class="panel" ripple :key="song.songId">
+        <v-expansion-panel-header>{{ song.title }}</v-expansion-panel-header>
         <v-expansion-panel-content>
-          <h4>QUEUED BY: {{ video.queuedBy }}</h4>
+          <h4>QUEUED BY: {{ song.queuedBy }}</h4>
           <v-btn :disabled="didVoteToSkip(index)" @click="voteSkip(index)" rounded>Vote Skip {{ totalVotesToSkip(index) }}</v-btn>
           <v-btn v-if="showUpVoteButton(index)" :disabled="didVoteUp(index)" @click="voteUp(index)" class="vote-up" rounded>Vote Up</v-btn>
         </v-expansion-panel-content>
@@ -20,29 +21,28 @@
 
 <script>
 import { db } from '../../firebaseConfig'
+import AddSongToPlaylist from './AddSongToPlaylist'
 import { mapState } from 'vuex'
 export default {
   name: 'queue-list',
-  props: [
-    'queue'
-  ],
+  computed: {
+    ...mapState({ user: 'user', crowd: 'crowd', queue: 'queue'})
+  },
   methods: {
     voteSkip (index) {
-      if (this.playMode) index++
-      this.fullQueue[index].votesToSkip.push(this.user.userId)
-      if (this.fullQueue[index].votesToSkip.length === Math.ceil(this.crowd.length / 2)) {
-        this.removefromQueue(this.fullQueue[index].videoId)
+      this.queue[index].votesToSkip.push(this.user.userId)
+      if (this.queue[index].votesToSkip.length === Math.ceil(this.crowd.length / 2)) {
+        this.removefromQueue(this.queue[index].videoId)
       } else {
         this.$store.commit('setQueue', {
-          Queue: this.fullQueue
+          Queue: this.queue
         })
 
-       db.collection('queues').doc('room').update({ queue: this.fullQueue })
+       db.collection('queues').doc('room').update({ queue: this.queue })
       }
     },
     didVoteToSkip(index) {
-      if (this.playMode) index++
-      var votesToSkip = this.fullQueue[index].votesToSkip.filter(x => x === this.user.userId)
+      var votesToSkip = this.queue[index].votesToSkip.filter(x => x === this.user.userId)
       if(votesToSkip.length > 0) {
         return true
       } else {
@@ -50,45 +50,41 @@ export default {
       }
     },
     totalVotesToSkip (index) {
-      if (this.playMode) index++
-      if (this.fullQueue[index].votesToSkip.length === 0) {
+      if (this.queue[index].votesToSkip.length === 0) {
         return ''
       } else {
-        var currentVotes = this.fullQueue[index].votesToSkip.length
+        var currentVotes = this.queue[index].votesToSkip.length
         var votesNeededToSkip = Math.ceil(this.crowd.length / 2)
         return currentVotes + '/' + votesNeededToSkip
       }
     },
-    removefromQueue (videoId) {
-      var removeIndex = this.fullQueue.findIndex(x => x.videoId === videoId)
-      this.fullQueue.splice(removeIndex, 1)
+    removefromQueue (songId) {
+      var removeIndex = this.queue.findIndex(x => x.songId === songId)
+      this.queue.splice(removeIndex, 1)
       this.$store.commit('setQueue', {
-        Queue: this.fullQueue
+        Queue: this.queue
       })
 
-     db.collection('queues').doc('room').update({ queue: this.fullQueue })
+     db.collection('queues').doc('room').update({ queue: this.queue })
     },
     showUpVoteButton(index) {
-      if (this.playMode) index++
       return index > 1
     },
     voteUp(index) {
-      if (this.playMode) index++
-      this.fullQueue[index].votesUp.push(this.user.userId)
-      var entryToMoveUp = this.fullQueue[index]
-      var entryAbove = this.fullQueue[index - 1]
-      this.fullQueue[index] = entryAbove
-      this.fullQueue[index - 1] = entryToMoveUp
+      this.queue[index].votesUp.push(this.user.userId)
+      var entryToMoveUp = this.queue[index]
+      var entryAbove = this.queue[index - 1]
+      this.queue[index] = entryAbove
+      this.queue[index - 1] = entryToMoveUp
 
       this.$store.commit('setQueue', {
-        Queue: this.fullQueue
+        Queue: this.queue
       })
 
-     db.collection('queues').doc('room').update({ queue: this.fullQueue })
+     db.collection('queues').doc('room').update({ queue: this.queue })
     },
     didVoteUp(index) {
-      if (this.playMode) index++
-      var votesToSkip = this.fullQueue[index].votesUp.filter(x => x === this.user.userId)
+      var votesToSkip = this.queue[index].votesUp.filter(x => x === this.user.userId)
       if(votesToSkip.length > 0) {
         return true
       } else {
@@ -96,8 +92,15 @@ export default {
       }
     }
   },
-  computed: {
-    ...mapState({ user: 'user', crowd: 'crowd', fullQueue: 'queue', playMode: 'playMode'})
+  watch: {
+    queue (newQueue) {
+      if (this.user && this.crowd && this.crowd.length > 0 && this.crowd[0].userId === this.user.userId && this.queue.length > 0) {
+        console.log('HERE')
+        AddSongToPlaylist({
+          songToAdd: newQueue[newQueue.length - 1]
+        })
+      }
+    }
   }
 }
 </script>

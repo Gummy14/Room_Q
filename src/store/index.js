@@ -7,15 +7,11 @@ export default new Vuex.Store({
   state: {
     apiKey: 'AIzaSyC-vYRiv_9Z21W7XJetZ1TUadKZRyhB294',
     searchResults: [],
-    playMode: false,
     queue: [],
     user: null,
     crowd: []
   },
   mutations: {
-    setPlayMode (state, payload) {
-      state.playMode = payload.PlayMode
-    },
     setSearchResults (state, payload) {
       state.searchResults = payload.SearchResults
     },
@@ -31,7 +27,6 @@ export default new Vuex.Store({
     clearStore (state) {
       state.searchResults = [],
       state.apiKeyPosition = 0,
-      state.playMode = false,
       state.queue = [],
       state.user = null,
       state.crowd = []
@@ -40,9 +35,6 @@ export default new Vuex.Store({
   actions: {
   },
   getters: {
-    getplayMode (state) {
-      return state.playMode
-    },
     getSearchResults (state) {
       return state.searchResults
     },
