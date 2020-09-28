@@ -7,13 +7,13 @@ export default function (options, callback) {
   // }  
   axios.get(BASE_URL, {
     headers: {
-      Authorization: 'Bearer BQDd6DPyDBOhN1BvXsmGHElR7AjF0QLppg2uu8VSWS-TW_vivVYrPYlG5CmsPnDVBdi_W77ZXV3JnOWO3pLFMzubHpPtjeMDS3aMMrHfFYcqPwzNDwb3_QM5Zn74JzvPH3fkdZ8zaJSjhrttDl2PJMjMMbDi51rgE8Lbf5tIE57zL2cPEuFtxT50DO95htUWCMSZ7HMjHXqr',
+      Authorization: 'Bearer BQBk05r7_N1csmOX77uS3SJyX0wVvX8o_KrI22f6ejF8qg59sWAkgAH6Uu_leGPXkhJ5vIWjJrDqxeZCOMZ19Ep1gPQ9tTpJofEiu_C7PccpRnnHb44b0CiUKf6TF7JHMsOaFYqJJIXMZkEiJD5AhdYXFg00YLwdO4-cTV4Yv4Kmk77jtqAwwJITiqctMmecKo-OZIwZ9B2D',
     },
     params: {
       q: options.searchQuery,
       type: 'track',
       market: 'US',
-      limit: 5,
+      limit: 25,
     } 
   })
   .then(response => {

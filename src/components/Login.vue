@@ -12,12 +12,6 @@
           v-model="name"
         >
         </v-text-field>
-        <v-text-field 
-          solo-inverted
-          label="Room Code"
-          v-model="roomCode"
-        >
-        </v-text-field>
         <v-btn @click="enterRoom">Enter</v-btn>
       </div>
     </div>

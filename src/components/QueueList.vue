@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h2 v-if="queue.length > 0">Now Queued</h2>
     <v-expansion-panels
       accordion
       v-if="queue && queue.length > 0" two-line>
@@ -8,7 +7,8 @@
       <v-expansion-panel class="panel" ripple :key="song.songId">
         <v-expansion-panel-header>{{ song.title }}</v-expansion-panel-header>
         <v-expansion-panel-content>
-          <h4>QUEUED BY: {{ song.queuedBy }}</h4>
+          <h2>{{ song.artist }}</h2>
+          <h5>QUEUED BY: {{ song.queuedBy }}</h5>
           <v-btn :disabled="didVoteToSkip(index)" @click="voteSkip(index)" rounded>Vote Skip {{ totalVotesToSkip(index) }}</v-btn>
           <v-btn v-if="showUpVoteButton(index)" :disabled="didVoteUp(index)" @click="voteUp(index)" class="vote-up" rounded>Vote Up</v-btn>
         </v-expansion-panel-content>
@@ -93,8 +93,8 @@ export default {
     }
   },
   watch: {
-    queue (newQueue) {
-      if (this.user && this.crowd && this.crowd.length > 0 && this.crowd[0].userId === this.user.userId && this.queue.length > 0) {
+    queue (newQueue, oldQueue) {
+      if (this.user && this.crowd && this.crowd.length > 0 && this.crowd[0].userId === this.user.userId && this.queue.length > 0 && newQueue.length != oldQueue.length) {
         console.log('HERE')
         AddSongToPlaylist({
           songToAdd: newQueue[newQueue.length - 1]
