@@ -7,7 +7,7 @@ export default function (options, callback) {
   // }  
   axios.get(BASE_URL, {
     headers: {
-      Authorization: 'Bearer BQBk05r7_N1csmOX77uS3SJyX0wVvX8o_KrI22f6ejF8qg59sWAkgAH6Uu_leGPXkhJ5vIWjJrDqxeZCOMZ19Ep1gPQ9tTpJofEiu_C7PccpRnnHb44b0CiUKf6TF7JHMsOaFYqJJIXMZkEiJD5AhdYXFg00YLwdO4-cTV4Yv4Kmk77jtqAwwJITiqctMmecKo-OZIwZ9B2D',
+      Authorization: 'Bearer ',
     },
     params: {
       q: options.searchQuery,
