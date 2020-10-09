@@ -9,7 +9,9 @@ export default new Vuex.Store({
     searchResults: [],
     queue: [],
     user: null,
-    crowd: []
+    crowd: [],
+    token: null,
+    playlist: ''
   },
   mutations: {
     setSearchResults (state, payload) {
@@ -24,12 +26,19 @@ export default new Vuex.Store({
     setCrowd (state, payload) {
       state.crowd = payload.Crowd
     },
+    setToken (state, payload) {
+      state.token = payload.Token
+    },
+    setPlaylist (state, payload) {
+      state.playlist = payload.Playlist
+    },
     clearStore (state) {
       state.searchResults = [],
       state.apiKeyPosition = 0,
       state.queue = [],
       state.user = null,
-      state.crowd = []
+      state.crowd = [],
+      state.playlist = ''
     }
   },
   actions: {
@@ -49,6 +58,12 @@ export default new Vuex.Store({
     },
     getCrowd (state) {
       return state.crowd
+    },
+    getToken (state) {
+      return state.token
+    },
+    getPlaylist (state) {
+      return state.playlist
     }
   }
 })

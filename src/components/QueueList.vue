@@ -26,7 +26,7 @@ import { mapState } from 'vuex'
 export default {
   name: 'queue-list',
   computed: {
-    ...mapState({ user: 'user', crowd: 'crowd', queue: 'queue'})
+    ...mapState({ user: 'user', crowd: 'crowd', queue: 'queue', token: 'token', playlist: 'playlist'})
   },
   methods: {
     voteSkip (index) {
@@ -95,9 +95,10 @@ export default {
   watch: {
     queue (newQueue, oldQueue) {
       if (this.user && this.crowd && this.crowd.length > 0 && this.crowd[0].userId === this.user.userId && this.queue.length > 0 && newQueue.length != oldQueue.length) {
-        console.log('HERE')
         AddSongToPlaylist({
-          songToAdd: newQueue[newQueue.length - 1]
+          songToAdd: newQueue[newQueue.length - 1],
+          accessToken: this.token.access_token,
+          playlist: this.playlist
         })
       }
     }

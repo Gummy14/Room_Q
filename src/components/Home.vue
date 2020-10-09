@@ -97,7 +97,8 @@ export default {
       this.isSearching = true
       if (this.query !== '') {
         GetSearchResults({
-          searchQuery: this.query
+          searchQuery: this.query,
+          accessToken: this.token.access_token
         }, response => {
           this.$store.commit('setSearchResults', {
             SearchResults: response
@@ -133,7 +134,6 @@ export default {
   },
   mounted () {
     var self = this
-
     db.collection('queues').doc('room').onSnapshot(function (doc) {
       self.$store.commit('setQueue', {
         Queue: doc.data().queue
@@ -141,10 +141,16 @@ export default {
       self.$store.commit('setCrowd', {
         Crowd: doc.data().crowd
       })
+      self.$store.commit('setToken', {
+        Token: doc.data().token
+      })
+      self.$store.commit('setPlaylist', {
+        Playlist: doc.data().playlist
+      })
     })
   },
   computed: {
-    ...mapState({ user: 'user', crowd: 'crowd'}),
+    ...mapState({ user: 'user', crowd: 'crowd', token: 'token'}),
     crowdSize () {
       if (this.crowd.length === 1) {
         return 'There is ' + this.crowd.length + ' person in the room'
