@@ -4,10 +4,33 @@
       <span class="font-italic">Room</span>
       <span class="font-weight-thin font-italic">Q</span>
     </div>
-    <v-btn outlined class="join-room" @click="joinRoom">Join Room</v-btn>
+    <v-btn outlined class="join-room" @click="joinRoom = !joinRoom">Join Room</v-btn>
     <v-btn outlined class="create-room" @click="createRoom">Create Room (Requires Spotify)</v-btn>
     <v-dialog v-model="spotifyAuth">
       <v-card class="enter-room">
+        <v-text-field
+          hide-details
+          rounded
+          dense
+          solo-inverted
+          v-model="name"
+          placeholder="Name"
+        >
+        </v-text-field>
+        <v-btn outlined class="enter-button" @click="enterRoom">Go!</v-btn>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="joinRoom">
+      <v-card class="enter-room">
+        <v-text-field
+          hide-details
+          rounded
+          dense
+          solo-inverted
+          v-model="roomCode"
+          placeholder="Room Code"
+        >
+        </v-text-field>
         <v-text-field
           hide-details
           rounded
@@ -37,7 +60,8 @@ export default {
     roomCode: '',
     spotifyAuth: false,
     token: null,
-    spotifyUserId: ''
+    spotifyUserId: '',
+    joinRoom: false
   }),
   methods: {
     enterRoom () {
@@ -106,9 +130,6 @@ export default {
         (scopes ? '&scope=' + encodeURIComponent(scopes) : '')
         
       window.location.replace(url)
-    },
-    joinRoom () {
-
     }
   },
   mounted () {
@@ -158,5 +179,8 @@ export default {
 .enter-button {
   margin-top: 2%; 
   width: 100%;
+}
+.text-field {
+  margin-bottom: 2%;
 }
 </style>
