@@ -112,7 +112,7 @@ export default {
       var userToRemove = this.user
       firebase.auth().signOut().then(function() {
         db.collection('queues').doc('room').get().then((doc) => {
-          var crowd = doc.data().crowd.filter(x => x !== userToRemove.userId)
+          var crowd = doc.data().crowd.filter(x => x.userId !== userToRemove.userId)
           db.collection('queues').doc('room').update({ crowd: crowd })
         })
         self.$store.commit('clearStore')
