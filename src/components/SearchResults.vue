@@ -20,7 +20,7 @@ import { db } from '../../firebaseConfig'
 export default {
   name: 'search-results',
   computed: {
-    ...mapState({ searchResults: 'searchResults', user: 'user'})
+    ...mapState({ searchResults: 'searchResults', user: 'user', roomCode: 'roomCode'})
   },
   methods: {
     addSongToQueue (song) {
@@ -37,7 +37,7 @@ export default {
       var newQueue = JSON.parse ( JSON.stringify ( this.$store.getters.getQueue) )
       newQueue.push(newQueueObject)
 
-      db.collection('queues').doc('room').update({ queue: newQueue })
+      db.collection('queues').doc(this.roomCode).update({ queue: newQueue })
       
       this.$store.commit('setSearchResults', {
         SearchResults: []

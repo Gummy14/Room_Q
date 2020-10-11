@@ -5,9 +5,10 @@
       <span class="font-weight-thin font-italic">Q</span>
     </div>
     <v-btn outlined class="join-room" @click="joinRoom = !joinRoom">Join Room</v-btn>
-    <v-btn outlined class="create-room" @click="createRoom">Create Room (Requires Spotify)</v-btn>
+    <v-btn outlined class="create-room" @click="authViaSpotify">Create Room (Requires Spotify)</v-btn>
     <v-dialog v-model="spotifyAuth">
       <v-card class="enter-room">
+        <v-card-title>Room Code: {{ $store.getters.getRoomCode }}</v-card-title>
         <v-text-field
           hide-details
           rounded
@@ -17,7 +18,7 @@
           placeholder="Name"
         >
         </v-text-field>
-        <v-btn outlined class="enter-button" @click="enterRoom">Go!</v-btn>
+        <v-btn outlined class="enter-button" @click="createRoom">Go!</v-btn>
       </v-card>
     </v-dialog>
     <v-dialog v-model="joinRoom">
@@ -81,21 +82,13 @@ export default {
             self.$store.commit('setUser', {
               User: user
             })
-            db.collection('queues').doc('room').get().then((doc) => {
+            self.$store.commit('setRoomCode', {
+              RoomCode: self.roomCode
+            })
+            db.collection('queues').doc(self.roomCode).get().then((doc) => {
               var crowd = doc.data().crowd
               crowd.push(user)
-              self.$store.commit('setCrowd', {
-                Crowd: crowd
-              })
-              db.collection('queues').doc('room').update({ crowd: crowd })
-              if (self.token) {
-                CreatePlaylist({
-                  spotifyUserId: self.spotifyUserId,
-                  accessToken: self.token.access_token
-                }, response => {
-                  db.collection('queues').doc('room').update({ token: self.token, playlist: response.id })
-                })
-              }
+              db.collection('queues').doc(self.roomCode).update({ crowd: crowd })
             })
             .then(() => {
               self.$router.replace('/home')
@@ -108,6 +101,51 @@ export default {
       )
     },
     createRoom () {
+      var db = firebase.firestore()
+      var self = this
+      var creadtedRoomCode = this.$store.getters.getRoomCode
+      firebase.auth().signInAnonymously().then(
+        function () {
+          var currentUser = firebase.auth().currentUser
+          currentUser.updateProfile({
+            displayName: self.name,
+          })
+          .then(function() {
+            var user = {
+              username: currentUser.displayName,
+              userId: currentUser.uid
+            }
+
+            self.$store.commit('setUser', {
+              User: user
+            })
+            
+            var crowd = []
+            crowd.push(user)
+
+            CreatePlaylist({
+              spotifyUserId: self.spotifyUserId,
+              accessToken: self.token.access_token
+            }, response => {
+              var databaseObject = {
+                crowd: crowd,
+                queue: [],
+                token: self.token,
+                playlist: response.id,
+              }
+              db.collection('queues').doc(creadtedRoomCode).set(databaseObject)
+              .then(function() {
+                self.$router.replace('/home')
+              })
+            })
+          })
+        },
+        function (error) {
+          alert('Failed to join!\n' + error.message)
+        }
+      )
+    },
+    authViaSpotify () {
       var my_client_id = 'b5a34f7fd495450db3ba31825bc8471c'
       var scopes = 'playlist-modify-public playlist-modify-private'
 
@@ -148,6 +186,9 @@ export default {
           accessToken: response.access_token
         }, response => {
           self.spotifyUserId = response.data.id
+          self.$store.commit('setRoomCode', {
+            RoomCode: 'room'
+          })
           self.spotifyAuth = true
         })
       })

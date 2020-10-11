@@ -2,7 +2,6 @@ let axios = require('axios')
 let BASE_URL = 'https://api.spotify.com/v1/search'
 
 export default function (options, callback) {
-  console.log('options.accessToken', options.accessToken)
   axios.get(BASE_URL, {
     headers: {
       Authorization: 'Bearer ' + options.accessToken,

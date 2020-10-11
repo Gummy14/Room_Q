@@ -26,7 +26,7 @@ import { mapState } from 'vuex'
 export default {
   name: 'queue-list',
   computed: {
-    ...mapState({ user: 'user', crowd: 'crowd', queue: 'queue', token: 'token', playlist: 'playlist'})
+    ...mapState({ user: 'user', crowd: 'crowd', queue: 'queue', token: 'token', playlist: 'playlist', roomCode: 'roomCode'})
   },
   methods: {
     voteSkip (index) {
@@ -38,7 +38,7 @@ export default {
           Queue: this.queue
         })
 
-       db.collection('queues').doc('room').update({ queue: this.queue })
+       db.collection('queues').doc(this.roomCode).update({ queue: this.queue })
       }
     },
     didVoteToSkip(index) {
@@ -65,7 +65,7 @@ export default {
         Queue: this.queue
       })
 
-     db.collection('queues').doc('room').update({ queue: this.queue })
+     db.collection('queues').doc(this.roomCode).update({ queue: this.queue })
     },
     showUpVoteButton(index) {
       return index > 1
@@ -81,7 +81,7 @@ export default {
         Queue: this.queue
       })
 
-     db.collection('queues').doc('room').update({ queue: this.queue })
+     db.collection('queues').doc(this.roomCode).update({ queue: this.queue })
     },
     didVoteUp(index) {
       var votesToSkip = this.queue[index].votesUp.filter(x => x === this.user.userId)

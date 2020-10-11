@@ -111,9 +111,9 @@ export default {
       var self = this
       var userToRemove = this.user
       firebase.auth().signOut().then(function() {
-        db.collection('queues').doc('room').get().then((doc) => {
+        db.collection('queues').doc(self.roomCode).get().then((doc) => {
           var crowd = doc.data().crowd.filter(x => x.userId !== userToRemove.userId)
-          db.collection('queues').doc('room').update({ crowd: crowd })
+          db.collection('queues').doc(self.roomCode).update({ crowd: crowd })
         })
         self.$store.commit('clearStore')
         alert('Successfully Logged Out!')
@@ -134,7 +134,7 @@ export default {
   },
   mounted () {
     var self = this
-    db.collection('queues').doc('room').onSnapshot(function (doc) {
+    db.collection('queues').doc(this.roomCode).onSnapshot(function (doc) {
       self.$store.commit('setQueue', {
         Queue: doc.data().queue
       })
@@ -150,7 +150,7 @@ export default {
     })
   },
   computed: {
-    ...mapState({ user: 'user', crowd: 'crowd', token: 'token'}),
+    ...mapState({ user: 'user', crowd: 'crowd', token: 'token', roomCode: 'roomCode'}),
     crowdSize () {
       if (this.crowd.length === 1) {
         return 'There is ' + this.crowd.length + ' person in the room'

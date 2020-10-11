@@ -11,7 +11,8 @@ export default new Vuex.Store({
     user: null,
     crowd: [],
     token: null,
-    playlist: ''
+    playlist: '',
+    roomCode: ''
   },
   mutations: {
     setSearchResults (state, payload) {
@@ -31,6 +32,9 @@ export default new Vuex.Store({
     },
     setPlaylist (state, payload) {
       state.playlist = payload.Playlist
+    },
+    setRoomCode (state, payload) {
+      state.roomCode = payload.RoomCode
     },
     clearStore (state) {
       state.searchResults = [],
@@ -64,6 +68,9 @@ export default new Vuex.Store({
     },
     getPlaylist (state) {
       return state.playlist
+    },
+    getRoomCode (state) {
+      return state.roomCode
     }
   }
 })
