@@ -68,6 +68,7 @@ export default {
     enterRoom () {
       var db = firebase.firestore()
       var self = this
+      this.roomCode = this.roomCode.toUpperCase()
       firebase.auth().signInAnonymously().then(
         function () {
           var currentUser = firebase.auth().currentUser
@@ -168,6 +169,14 @@ export default {
         (scopes ? '&scope=' + encodeURIComponent(scopes) : '')
         
       window.location.replace(url)
+    },
+    generateRoomCode () {
+      var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+      var generatedRoomCode = ''
+      for(let i = 0; i < 4; i++) {
+        generatedRoomCode += characters.charAt(Math.floor(Math.random() * characters.length));
+      }
+      return generatedRoomCode
     }
   },
   mounted () {
@@ -187,7 +196,7 @@ export default {
         }, response => {
           self.spotifyUserId = response.data.id
           self.$store.commit('setRoomCode', {
-            RoomCode: 'room'
+            RoomCode: self.generateRoomCode()
           })
           self.spotifyAuth = true
         })
